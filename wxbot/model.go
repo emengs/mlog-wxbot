@@ -55,7 +55,7 @@ type WxArticleCallback func(article WxArticle)
 func collect(url string) *WxArticle {
 	article, err := collectArticle(url)
 	if err != nil {
-		logrus.Error("抓取文章失败：" + url)
+		logrus.Error("抓取文章失败："+url, err)
 		return nil
 	}
 	if len(article.URL) == 0 {
@@ -167,7 +167,7 @@ func publish(article *WxArticle) {
 		logrus.Error(err)
 		return
 	}
-	response, err := resty.SetTimeout(time.Second * 3).R().
+	response, err := resty.SetTimeout(time.Second * 10).R().
 		SetBody(json).
 		Post(config.Conf.PublishApi + "?token=" + config.Conf.PublishToken)
 	if err != nil {

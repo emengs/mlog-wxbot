@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/resty.v1"
 )
 
@@ -192,12 +191,14 @@ func handleContent(selection *goquery.Selection) {
 			return
 		}
 
-		output, err := CopyImage(src)
-		if err == nil {
-			selection.SetAttr("src", output)
-		} else {
-			logrus.Error(err)
-		}
+		// TODO 这里不再继续转存图片了，太费空间了。
+		// output, err := CopyImage(src)
+		// if err == nil {
+		// 	selection.SetAttr("src", output)
+		// } else {
+		// 	logrus.Error(err)
+		// }
+		selection.SetAttr("src", src)
 	})
 
 	attrs := []string{"class", "id", "onclick", "onmouseover", "data-mpa-powered-by", "data-mpa-template-id",
