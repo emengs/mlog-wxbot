@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
-	"github.com/mlogclub/mlog-wxbot/config"
-	"github.com/mlogclub/simple"
 	"time"
+
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/mlog-wxbot/config"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/sirupsen/logrus"
@@ -31,6 +33,10 @@ func init() {
 }
 
 func main() {
+	go func() {
+		wxbot.PublishOnStart()
+	}()
+
 	session, err := wxweb.CreateSession(nil, nil, wxweb.TERMINAL_MODE)
 	if err != nil {
 		return
