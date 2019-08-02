@@ -2,12 +2,13 @@ package wxbot
 
 import (
 	"fmt"
-	"github.com/mlogclub/mlog-wxbot/config"
 	"image"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/mlog-wxbot/config"
 
 	"github.com/mlogclub/mlog-wxbot/baiduai"
 
@@ -174,18 +175,20 @@ func publish(article *WxArticle) {
 		logrus.Error(err)
 		return
 	}
-	ret := gjson.Get(string(response.Body()), "data.id")
-
-	articleId := ret.Int()
-	if articleId > 0 {
-		logrus.Info("成功发布文章..." + strconv.FormatInt(articleId, 10))
-		simple.GetDB().Model(&WxArticle{}).Where("id = ?", article.Id).Updates(map[string]interface{}{
-			"article_id":   articleId,
-			"publish_time": simple.NowTimestamp(),
-		})
+	body := string(response.Body())
+	if gjson.Get(body, "success").Bool() {
+		articleId := gjson.Get(body, "data.id").Int()
+		if articleId > 0 {
+			logrus.Info("成功发布文章..." + strconv.FormatInt(articleId, 10))
+			simple.GetDB().Model(&WxArticle{}).Where("id = ?", article.Id).Updates(map[string]interface{}{
+				"article_id":   articleId,
+				"publish_time": simple.NowTimestamp(),
+			})
+		}
 	} else {
-		logrus.Info("文章发布失败..." + string(response.Body()))
+		logrus.Info("文章发布失败...:" + gjson.Get(body, "message").String())
 	}
+
 }
 
 // checkImage 检查图片合法性，宽高大于或等于320
