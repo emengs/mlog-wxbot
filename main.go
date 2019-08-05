@@ -33,9 +33,9 @@ func init() {
 }
 
 func main() {
-	go func() {
-		wxbot.PublishOnStart()
-	}()
+	// go func() {
+	// 	wxbot.PublishOnStart()
+	// }()
 
 	session, err := wxweb.CreateSession(nil, nil, wxweb.TERMINAL_MODE)
 	if err != nil {
