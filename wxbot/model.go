@@ -29,6 +29,7 @@ type WxArticle struct {
 	HtmlContent string `gorm:"type:longtext" json:"htmlContent"`        // 公众号文章html内容
 	MdContent   string `gorm:"type:longtext" json:"mdContent"`          // 公众号文章md内容
 	TextContent string `gorm:"type:longtext" json:"textContent"`        // 文本内容
+	Summary     string `gorm:"type:longtext" json:"summary"`            // 摘要
 	PubAt       string `gorm:"type:longtext" json:"pubAt"`              // 发布时间
 	UrlMd5      string `gorm:"size:64;index:idx_url_md5" json:"urlMd5"` // 链接地址的md5
 	RoundHead   string `gorm:"type:longtext" json:"roundHead"`          // 圆头像
@@ -122,14 +123,20 @@ func collect(url string) *WxArticle {
 	if len(article.Images) > 0 {
 		var imgArr []string
 		for _, img := range article.Images {
-			if checkImage(img) {
-				imgArr = append(imgArr, img)
-			}
+			// if checkImage(img) {
+			imgArr = append(imgArr, img)
+			// }
 		}
 		if len(imgArr) > 0 {
 			wxArticle.Images = strings.Join(imgArr, ";")
 		}
 	}
+
+	summary, err := baiduai.GetNewsSummary(wxArticle.Title, wxArticle.TextContent, 256)
+	if err != nil || summary == "" {
+		summary = simple.GetSummary(wxArticle.TextContent, 256)
+	}
+	wxArticle.Summary = summary
 
 	// // 增加音频标签
 	// if wxArticle.Audio != `` {

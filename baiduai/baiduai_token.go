@@ -2,8 +2,10 @@ package baiduai
 
 import (
 	"errors"
-	"github.com/mlogclub/mlog-wxbot/config"
+
 	"github.com/sirupsen/logrus"
+
+	"github.com/mlogclub/mlog-wxbot/config"
 
 	"github.com/imroc/req"
 )
