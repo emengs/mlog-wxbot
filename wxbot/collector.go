@@ -201,6 +201,9 @@ func handleContent(selection *goquery.Selection) {
 		selection.SetAttr("src", src)
 	})
 
+	// 代码行号
+	selection.Find(".code-snippet__line-index").Remove()
+
 	attrs := []string{"class", "id", "onclick", "onmouseover", "data-mpa-powered-by", "data-mpa-template-id",
 		"data-mpa-color", "data-mpa-category", "data-tools", "data-id", "data-ratio", "data-s", "data-src", "data-type",
 		"data-h", "data-w", "data-backh", "data-backw", "data-before-oversubscription-url", "data-linktype",
